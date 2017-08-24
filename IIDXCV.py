@@ -96,12 +96,12 @@ while fvs.more():
         pixel = mask[Key.y, Key.x]
 
         # if white pixel found, press key, add to keysPressed & print arrays
-        if pixel == 255 && Key not in keysPressed:
+        if pixel == 255 and Key not in keysPressed:
             pressKey(Key)
             printArray[idx] = Key.name
 
         # if white pixel not found & key is in keysPressed, release & remove from array
-        else if pixel != 255 && Key in keysPressed:
+        else if pixel != 255 and Key in keysPressed:
             releaseKey(Key)
 
         # else don't do anything at all! wow!
