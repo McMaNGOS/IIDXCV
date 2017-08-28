@@ -44,11 +44,22 @@ By default, the pixel coordinates for each key is at the center & bottom of its 
 
 ### Run script with video
 ```
-python IIDXCV.py -v yourvideo.mp4
+python IIDXCV_video.py -v yourvideo.mp4
 ```
 The video should start, and you should start seeing keystrokes in the console window. Giving another window focus may send keystrokes to that window instead, so be careful here.
 
 You can cancel the execution of the bot by pressing CTRL+C.
+
+### Run script with desktop capture (actual gameplay)
+This is far from implemented, so you'll have to tinker a bit by yourself if you want this at this point.
+
+Modify the `cap = cv2.VideoCapture(0)` line to have it access your virtual webcam. Change the input keys in the game you're using to the values specified in this bot's source code (or just modify those, your call). Add code to crop frame, modify key pixel x/y coordinates, then run:
+```
+python IIDXCV_live.py
+```
+Again, frame cropping is not implemented, nor is any form of delay accommodation. Not even sure if there's any virtual webcam/desktop video capture solution out there with low enough latency to work as a plug-and-play solution like this. 
+
+Anyway, good luck! :)
 
 ## TODO (in order of priority)
 
