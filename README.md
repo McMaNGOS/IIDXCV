@@ -1,7 +1,7 @@
 # IIDXCV
 A (currently proof-of-concept) OpenCV-powered IIDX-style rhythm game playing bot.
 
-Right now capable of detecting when notes reach the bottom of the screen, at which point it prints the detected keys to the console.
+Right now capable of processing IIDX gameplay videos, detecting notes, and hitting the corresponding keys on the keyboard when the notes reach the bottom of the screen.
 
 *building for educational purposes only, cheating is Bad™*
 
@@ -10,10 +10,11 @@ To run this, you'll need the following installed and configured properly on your
 
 * Python 2.7.10+
 * OpenCV 3.3.0 (with relevant packages, numpy etc)
-* [imutils](https://github.com/jrosebr1/imutils)
+* [PyUserInput](https://github.com/PyUserInput/PyUserInput) (with dependencies needed for your OS)
+* [imutils](https://github.com/jrosebr1/imutils) (for video processing, won't be needed later)
 
 ## Usage
-*Do note that the bot currently cannot play anything, and is only capable of reading video and printing the notes it detects on-screen to the console (it is a proof-of-concept, after all).*
+*Do note that the bot currently cannot play anything; it is only capable of processing gameplay footage and pressing keys (it is a proof-of-concept, after all).*
 
 ### Prepare a Beatmania IIDX video to use as input
 
@@ -45,13 +46,17 @@ By default, the pixel coordinates for each key is at the center & bottom of its 
 ```
 python IIDXCV.py -v yourvideo.mp4
 ```
-The video should start, and keys should begin being printed to the console upon detection.
+The video should start, and you should start seeing keystrokes in the console window. Giving another window focus may send keystrokes to that window instead, so be careful here.
+
+You can cancel the execution of the bot by pressing CTRL+C.
 
 ## TODO (in order of priority)
 
-### Add button-hitting capabilities
+### ~~Add button-hitting capabilities~~ (DONE)
 
-Self-explanatory, probably simple to implement since there are Python libraries available for this purpose (inputs, pygame, etc).
+~~Self-explanatory, probably simple to implement since there are Python libraries available for this purpose (inputs, pygame, etc).~~
+
+This is now implemented. The bot uses PyUserInput to press keys (simple, cross-platform solution). To use this bot with a gamepad, one would have to use an application to bind keystrokes to gamepad presses.
 
 ### Read from screen instead of video
 
