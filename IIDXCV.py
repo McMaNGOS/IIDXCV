@@ -1,10 +1,10 @@
 from imutils.video import FileVideoStream
+from pykeyboard import PyKeyboard
 import cv2
 import numpy as np
 import argparse
 import imutils
 import time
-import pyvjoy
 
 # argument parser (for video, will use stream/live frames in future)
 ap = argparse.ArgumentParser()
@@ -30,39 +30,34 @@ class Key:
         # name of key (to print in console)
         self.name = name
 
-        # vJoy button to press
+        # keyboard button to press
         self.keyButton = keyButton
 
-# set key state to on (1)
-def pressKey(key):
-    global keysPressed
-    gamepad.set_button(key.keyButton, 1)
-    keysPressed.append(key)
+# presses and holds input key, adds key to array
+def pressKey(key, pressedArray):
+    keyboard.press_key(key.keyButton)
+    pressedArray.append(key)
 
-# set key state to off (0)
-def releaseKey(key):
-    global keysPressed
-    gamepad.set_button(key.keyButton, 0)
-    keysPressed.remove(key)
-
-# LR2 treats the scratch as two normal keys, while IIDX treats it as a
-# rotating axis. Separate function will be needed for IIDX. (pass game as arg?)
+# releases input key, removes key from array
+def releaseKey(key, pressedArray):
+    keyboard.release_key(key.keyButton)
+    pressedArray.remove(key)
 
 # define keys (8 for IIDX-style games)
-scratch = Key(16, 99, "SCRATCH", 1)
-key1 = Key(70, 99, "KEY 1", 2)
-key2 = Key(104, 99, "KEY 2", 3)
-key3 = Key(135, 99, "KEY 3", 4)
-key4 = Key(169, 99, "KEY 4", 5)
-key5 = Key(199, 99, "KEY 5", 6)
-key6 = Key(232, 99, "KEY 6", 7)
-key7 = Key(263, 99, "KEY 7", 8)
+scratch = Key(16, 99, "SCRATCH", 'X')
+key1 = Key(70, 99, "KEY 1", 'C')
+key2 = Key(104, 99, "KEY 2", 'F')
+key3 = Key(135, 99, "KEY 3", 'V')
+key4 = Key(169, 99, "KEY 4", 'G')
+key5 = Key(199, 99, "KEY 5", 'B')
+key6 = Key(232, 99, "KEY 6", 'H')
+key7 = Key(263, 99, "KEY 7", 'N')
 
 # put keys in array
 keyArray = [scratch, key1, key2, key3, key4, key5, key6, key7]
 
-# construct gamepad
-gamepad = pyvjoy.VJoyDevice(1)
+# initialize keyboard
+keyboard = PyKeyboard()
 
 # create background subtractor
 bgSub = cv2.createBackgroundSubtractorMOG2()
@@ -85,9 +80,9 @@ while fvs.more():
     # apply mask to frame
     mask = bgSub.apply(cropped_frame)
 
-    # keys to print (underscores by default, for readability)
-    printArray = ['_______', '_____', '_____', '_____', '_____', '_____', '_____', '_____']
-    initialPrintArray = printArray
+    # keys to print (underscores by default, for readability) [for debugging]
+    # printArray = ['_______', '_____', '_____', '_____', '_____', '_____', '_____', '_____']
+    # initialPrintArray = printArray
 
     # loop through keys in array
     for idx, Key in enumerate(keyArray):
@@ -95,22 +90,18 @@ while fvs.more():
         # detect pixel at given coordinates
         pixel = mask[Key.y, Key.x]
 
-        # if white pixel found, press key, add to keysPressed & print arrays
+        # if white pixel found, pressKey
         if pixel == 255 and Key not in keysPressed:
-            pressKey(Key)
-            printArray[idx] = Key.name
+            pressKey(Key, keysPressed)
+            # printArray[idx] = Key.name
 
-        # if white pixel not found & key is in keysPressed, release & remove from array
-        else if pixel != 255 and Key in keysPressed:
-            releaseKey(Key)
-
-        # else don't do anything at all! wow!
-        else
-            pass
+        # if white pixel not found & key is in keysPressed, releaseKey
+        if pixel != 255 and Key in keysPressed:
+            releaseKey(Key, keysPressed)
 
     # print if array is different from default (= key detected)
-    if printArray != initialPrintArray:
-        print printArray
+    # if printArray != initialPrintArray:
+    #    print printArray
 
     # display frame with mask
     cv2.imshow("output", mask)
