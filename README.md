@@ -5,6 +5,11 @@ Right now capable of processing IIDX gameplay videos, detecting notes, and hitti
 
 *building for educational purposes only, cheating is Bad™*
 
+## Demonstration
+![Demo](https://media.giphy.com/media/VHLTjpHX0h9XW/giphy.gif)
+
+The gif above shows the bot running with [this](https://www.youtube.com/watch?v=NoR0qqmfm3s) video as input, printing the keys to the terminal window when they hit the bottom of the screen.
+
 ## Setup
 To run this, you'll need the following installed and configured properly on your system:
 
